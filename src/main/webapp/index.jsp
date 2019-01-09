@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Title</title>
+    <title>Login</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -36,6 +36,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
+      <a href="./register.jsp">Not registered yet ? Do it now !</a>
       </div>
       <%@ include file="WEB-INF/bootstrap.html" %>
   </body>
