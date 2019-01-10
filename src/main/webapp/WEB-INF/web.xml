@@ -4,7 +4,14 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
-  <listener>
-  	<listener-class>controller.Controller</listener-class>
-  </listener>
+  <filter>
+  	<filter-name>Controller</filter-name>
+  	<display-name>Controller</display-name>
+  	<description></description>
+  	<filter-class>controller.Controller</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>Controller</filter-name>
+  	<url-pattern>/Controller</url-pattern>
+  </filter-mapping>
 </web-app>
