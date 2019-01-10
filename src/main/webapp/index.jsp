@@ -25,14 +25,14 @@
     </div>
 
     <div id="loginForm" class="container">
-      <form action="" method="post">
+      <form action="login" method="post">
         <div class="form-group">
           <label>Email</label>
-          <input type="email" class="form-control" name="" id="" aria-describedby="emailHelpId" placeholder="">
+          <input type="email" class="form-control" name="email" id="" aria-describedby="emailHelpId" placeholder="">
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input type="password" class="form-control" name="" id="" placeholder="">
+          <input type="password" class="form-control" name="password" id="" placeholder="">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
