@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Event;
+import model.Participate;
 import model.User;
 
 /**
@@ -41,7 +42,9 @@ public class Controller implements Filter {
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
+						throws IOException, ServletException {
+
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp =(HttpServletResponse) response;
 		RequestDispatcher rs = null;
@@ -53,41 +56,41 @@ public class Controller implements Filter {
 				resp.sendRedirect("Menu.jsp");
 				break;
 			}
+
 			case "/Projet/Menu.jsp" : {
-				if(isLoggedIn(req)){
-					rs = request.getRequestDispatcher("/Menu.jsp");
+				if(!isLoggedIn(req)){
+					resp.sendRedirect("index.jsp");
 				}else {
-					rs = request.getRequestDispatcher("/index.jsp");
+					rs = request.getRequestDispatcher("Menu.jsp");
 				}
 				break;
 			}
+
 			case "/Projet/login" : {
 				User user = login(req);
 				if(user != null) {
 					req.getSession().setAttribute("user", user);
-					rs = req.getRequestDispatcher("/Menu.jsp");
+					resp.sendRedirect("Menu.jsp");
 				}else {
 					resp.sendRedirect("index.jsp?error=1");
 				}
 				break;
 			}
+
 			case "/Projet/disconnect" : {
 				req.getSession().invalidate();
 				rs = req.getRequestDispatcher("index.jsp");
 				break;
 			}
+
 			case "/Projet/createEvent" : {
 				Integer num = createEvent(req);
 				resp.sendRedirect("oui.html?eno=" + num);
+				break;
 			}
-			
 
 			default: {
-				if(req.getRequestURI().contains("/Projet/oui.html")){
-					chain.doFilter(request, response);
-				}else {
-					System.out.println(req.getRequestURI());
-				}
+				chain.doFilter(request, response);
 			}
 		}
 
@@ -96,11 +99,17 @@ public class Controller implements Filter {
 
 	private Integer createEvent(HttpServletRequest req) {
 		Event event = new Event();
+		User user = (User)req.getSession().getAttribute("user");
+		Integer uno = user.getUno();
+		Participate p = new Participate();
+		p.setUno(uno);
 		event.setDescr(req.getParameter("desc"));
 		event.setTitle(req.getParameter("name"));
 		em.getTransaction().begin();
 		em.persist(event);
 		em.flush();
+		p.setEno(event.getEno());
+		em.persist(p);
 		em.getTransaction().commit();
 		return event.getEno();
 	}
