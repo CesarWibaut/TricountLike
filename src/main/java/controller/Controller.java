@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -85,7 +86,18 @@ public class Controller implements Filter {
 
 			case "/Projet/createEvent" : {
 				Integer num = createEvent(req);
-				resp.sendRedirect("oui.html?eno=" + num);
+				updateSession(req);
+				resp.sendRedirect("event.jsp?eno=" + num);
+				break;
+			}
+
+			case "/Projet/event.jsp" :{
+				if(!isLoggedIn(req)){
+					resp.sendRedirect("index.jsp");
+				}else {
+					initEvent(req);
+					rs = request.getRequestDispatcher("event.jsp");
+				}
 				break;
 			}
 
@@ -95,6 +107,16 @@ public class Controller implements Filter {
 		}
 
 		if(rs != null ) rs.forward(request, response);
+	}
+
+	private void initEvent(HttpServletRequest req) {
+		Event e = em.find(Event.class, Integer.valueOf(req.getParameter("eno")));
+		req.setAttribute("event", e);
+	}
+
+	private void updateSession(HttpServletRequest req) {
+		User user = (User) req.getSession().getAttribute("user");
+		em.refresh(user);
 	}
 
 	private Integer createEvent(HttpServletRequest req) {
@@ -151,6 +173,7 @@ public class Controller implements Filter {
 	public void init(FilterConfig fConfig) throws ServletException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("projet");
 		em = emf.createEntityManager();
+		em.setFlushMode(FlushModeType.AUTO);
 	}
 
 }

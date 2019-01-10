@@ -61,4 +61,7 @@ public class Event implements Serializable {
 		this.users = users;
 	}
 
+	public String toString(){
+		return "<p><strong>" + getTitle() + " : </strong> " + getDescr() + "<p>";
+	}
 }
