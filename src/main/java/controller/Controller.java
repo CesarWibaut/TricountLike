@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Event;
 import model.User;
 
 /**
@@ -42,13 +43,13 @@ public class Controller implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
+		HttpServletResponse resp =(HttpServletResponse) response;
 		RequestDispatcher rs = null;
 
 		switch (req.getRequestURI()) {
 			case "/Projet/register" : {
 				User me = createNewUser(request);
 				req.getSession().setAttribute("user", me);
-				HttpServletResponse resp =(HttpServletResponse) response;
 				resp.sendRedirect("Menu.jsp");
 				break;
 			}
@@ -60,10 +61,59 @@ public class Controller implements Filter {
 				}
 				break;
 			}
-			default: chain.doFilter(request, response);
+			case "/Projet/login" : {
+				User user = login(req);
+				if(user != null) {
+					req.getSession().setAttribute("user", user);
+					rs = req.getRequestDispatcher("/Menu.jsp");
+				}else {
+					resp.sendRedirect("index.jsp?error=1");
+				}
+				break;
+			}
+			case "/Projet/disconnect" : {
+				req.getSession().invalidate();
+				rs = req.getRequestDispatcher("index.jsp");
+				break;
+			}
+			case "/Projet/createEvent" : {
+				Integer num = createEvent(req);
+				resp.sendRedirect("oui.html?eno=" + num);
+			}
+			
+
+			default: {
+				if(req.getRequestURI().contains("/Projet/oui.html")){
+					chain.doFilter(request, response);
+				}else {
+					System.out.println(req.getRequestURI());
+				}
+			}
 		}
 
 		if(rs != null ) rs.forward(request, response);
+	}
+
+	private Integer createEvent(HttpServletRequest req) {
+		Event event = new Event();
+		event.setDescr(req.getParameter("desc"));
+		event.setTitle(req.getParameter("name"));
+		em.getTransaction().begin();
+		em.persist(event);
+		em.flush();
+		em.getTransaction().commit();
+		return event.getEno();
+	}
+
+	private User login(HttpServletRequest req) {
+		try {
+			return (User) em.createNamedQuery("User.login")
+				.setParameter("email", req.getParameter("email"))
+				.setParameter("password", req.getParameter("password"))
+				.getSingleResult();
+		}catch (Exception e) {
+			return null;
+		}
 	}
 
 	private boolean isLoggedIn(HttpServletRequest request) {
