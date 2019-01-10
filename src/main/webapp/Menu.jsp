@@ -21,14 +21,21 @@
 </head>
 
 <body>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <%@include file="WEB-INF/navbar.html" %>
+
+
+    <%@ page isELIgnored="false" %>
     <div class="container card" id="main">
         <div class="row">
             <div class="col-sm">
-                <h3>My events :</h3>
-
-                <!-- TODO : foreach sur la liste de mes events -->
-
+                <div class="container" id="events">
+                    <h3>My events :</h3>
+                    <br>
+                    <c:forEach var="event" items="${user.events}">
+                         <a href="event.jsp?eno=${event.eno}">${event}</a>
+                    </c:forEach>
+                </div>
             </div>
             <div class="col-sm">
                 <h3>Create an event !</h3>
