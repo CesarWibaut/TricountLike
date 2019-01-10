@@ -19,7 +19,7 @@
     <%@ include file="WEB-INF/navbar.html" %>
 
     <div class="jumbotron text-center">
-      <h1 class="display-3">Tricount</h1>
+      <h1 class="display-3">Tricount DA2I</h1>
       <p class="lead">The easiest way to manage your budget</p>
       <hr class="my-2">
     </div>
