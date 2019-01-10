@@ -23,6 +23,8 @@ public class Spent implements Serializable {
 
 	private String descr;
 
+	private Float ammount;
+
 	//bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name="uno")
@@ -35,6 +37,20 @@ public class Spent implements Serializable {
 	public Spent() {
 	}
 
+	/**
+	 * @param ammount the ammount to set
+	 */
+	public void setAmmount(Float ammount) {
+		this.ammount = ammount;
+	}
+
+	/**
+	 * @return the ammount
+	 */
+	public Float getAmmount() {
+		return ammount;
+	}
+	
 	public Integer getSno() {
 		return this.sno;
 	}
