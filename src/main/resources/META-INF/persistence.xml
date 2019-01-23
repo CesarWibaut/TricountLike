@@ -5,13 +5,11 @@
 		<class>model.Spent</class>
 		<class>model.User</class>
 		<class>model.Participate</class>
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<properties>
-			<property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
-			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://psqlserv/da2i"/>
-			<property name="javax.persistence.jdbc.user" value="wibautc"/>
-			<property name="javax.persistence.jdbc.password" value="moi"/>
-			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-			<property name="javax.persistence.schema-generation.database.action" value="create"/>
+			<!-- <property name="eclipselink.session.customizer" value="other.JPAEclipseLinkSessionCustomizer"/> -->
+			<property name="eclipselink.ddl-generation" value="create-tables"/>    
 		</properties>
+		<non-jta-data-source>java:comp/env/jdbc/sqlite</non-jta-data-source>
 	</persistence-unit>
 </persistence>
