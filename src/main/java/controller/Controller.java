@@ -157,6 +157,7 @@ public class Controller implements Filter {
 		u.setPwd(request.getParameter("password"));
 		u.setFirstname(request.getParameter("firstname"));
 		u.setLastname(request.getParameter("lastname"));
+		u.setRole("user");
 		
 		System.out.println(em);
 		em.getTransaction().begin();

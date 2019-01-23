@@ -26,6 +26,8 @@ public class User implements Serializable {
 
 	private String login;
 
+	private String role;
+
 	private String pwd;
 
 	//bi-directional many-to-many association to Event
@@ -67,6 +69,14 @@ public class User implements Serializable {
 
 	public void setUno(Integer uno) {
 		this.uno = uno;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getFirstname() {

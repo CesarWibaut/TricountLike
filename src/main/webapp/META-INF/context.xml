@@ -3,12 +3,18 @@
 <Context>
 
 <Resource name="jdbc/sqlite"
-type="javax.sql.DataSource"
-driverClassName="org.sqlite.JDBC"
-url="jdbc:sqlite:db"
-maxActive="20" maxIdle="10"
-username=""
-password=""
+    type="javax.sql.DataSource"
+    driverClassName="org.sqlite.JDBC"
+    url="jdbc:sqlite:db"
+    maxActive="20" maxIdle="10"
+    username=""
+    password=""
 />
+
+<Realm className="org.apache.catalina.realm.DataSourceRealm"
+    dataSourceName="jdbc/sqlite"
+    userTable="users" userNameCol="login"
+    userCredCol="pwd" userRoleTable="users"
+    roleNameCol="role" />
 
 </Context>
