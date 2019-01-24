@@ -149,4 +149,9 @@ public class User implements Serializable {
 		this.spents2 = spents2;
 	}
 
+	@Override
+	public String toString() {
+		return getLogin() + "  " + getRole();
+	}
+	
 }

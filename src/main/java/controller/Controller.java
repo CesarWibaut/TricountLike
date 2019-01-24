@@ -117,6 +117,7 @@ public class Controller implements Filter {
 	private void updateSession(HttpServletRequest req) {
 		User user = (User) req.getSession().getAttribute("user");
 		em.refresh(user);
+		System.out.println(user);
 	}
 
 	private Integer createEvent(HttpServletRequest req) {
@@ -158,7 +159,7 @@ public class Controller implements Filter {
 		u.setFirstname(request.getParameter("firstname"));
 		u.setLastname(request.getParameter("lastname"));
 		u.setRole("user");
-		
+
 		System.out.println(em);
 		em.getTransaction().begin();
 		em.persist(u);

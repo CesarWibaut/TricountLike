@@ -12,9 +12,9 @@
 />
 
 <Realm className="org.apache.catalina.realm.DataSourceRealm"
-    dataSourceName="jdbc/sqlite"
+    dataSourceName="java:comp/env/jdbc/sqlite"
     userTable="users" userNameCol="login"
     userCredCol="pwd" userRoleTable="users"
-    roleNameCol="role" />
+    roleNameCol="role" localDataSource="true" />
 
 </Context>
