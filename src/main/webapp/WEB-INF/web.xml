@@ -16,7 +16,7 @@
   </filter-mapping>
 
 	<resource-ref>
-		<res-ref-name>jdbc/sqlite</res-ref-name>
+		<res-ref-name>jdbc/postgres</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 	</resource-ref>
 

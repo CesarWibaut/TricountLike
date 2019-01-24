@@ -8,8 +8,8 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<properties>
 			<!-- <property name="eclipselink.session.customizer" value="other.JPAEclipseLinkSessionCustomizer"/> -->
-			<property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>    
+			<property name="eclipselink.ddl-generation" value="create-tables"/>    
 		</properties>
-		<non-jta-data-source>java:comp/env/jdbc/sqlite</non-jta-data-source>
+		<non-jta-data-source>java:comp/env/jdbc/postgres</non-jta-data-source>
 	</persistence-unit>
 </persistence>

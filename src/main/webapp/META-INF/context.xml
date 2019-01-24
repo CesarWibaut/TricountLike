@@ -2,19 +2,17 @@
 
 <Context>
 
-<Resource name="jdbc/sqlite"
-    type="javax.sql.DataSource"
-    driverClassName="org.sqlite.JDBC"
-    url="jdbc:sqlite:db"
-    maxActive="20" maxIdle="10"
-    username=""
-    password=""
-/>
+  <Resource auth="Container" 
+  driverClassName="org.postgresql.Driver" 
+  maxTotal="4" maxIdle="2" 
+  maxWaitMillis="10000" name="jdbc/postgres" 
+  password="moi" type="javax.sql.DataSource" 
+  url="jdbc:postgresql://psqlserv/da2i" username="wibautc"/>
 
-<Realm className="org.apache.catalina.realm.DataSourceRealm"
-    dataSourceName="java:comp/env/jdbc/sqlite"
-    userTable="users" userNameCol="login"
-    userCredCol="pwd" userRoleTable="users"
-    roleNameCol="role" localDataSource="true" />
+
+<Realm  className="org.apache.catalina.realm.DataSourceRealm"
+           dataSourceName="jdbc/postgres" localDataSource="true"
+           userTable="users" userNameCol="login" userCredCol="pwd"
+           userRoleTable="users" roleNameCol="role" />
 
 </Context>
