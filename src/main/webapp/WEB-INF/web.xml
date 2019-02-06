@@ -24,6 +24,7 @@
 		<web-resource-collection>
 			<web-resource-name>index</web-resource-name>
 			<url-pattern>/event.jsp</url-pattern>
+			<url-pattern>/Menu.jsp</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>user</role-name>
@@ -35,6 +36,9 @@
 
 
 	<login-config>
-		<auth-method>BASIC</auth-method>
-	</login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/index.jsp</form-login-page>
+		</form-login-config>
+	</login-config> 
 </web-app>

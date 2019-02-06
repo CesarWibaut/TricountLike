@@ -12,12 +12,31 @@
   <body>
       <%@ include file="WEB-INF/navbar.html" %>
       <%@ page isELIgnored="false" %>
-    <div class="jumbotron text-center">
-        <h1 class="display-3">${event.title}</h1>
-        <p class="lead">${event.descr}</p>
-    </div>
-      <div class="container">
-          
+
+      <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+      <div class="jumbotron text-center">
+          <h1 class="display-3">${event.title}</h1>
+          <p class="lead">${event.descr}</p>
       </div>
+        <div class="container">
+          <div class="container card" id="main">
+              <div class="row">
+                  <div class="col-sm">
+                      <h2> Participants : </h2>
+                      <br>
+                      <c:forEach var="user" items="${event.users}">
+                          <p>${user}</p>
+                      </c:forEach>
+                  </div>
+                  <div class="col-sm">
+                      <h2> Total spent : </h2>
+                      <br>
+                      <c:forEach var="spent" items="${event.spents}">
+                          <p>${spent}</p>
+                      </c:forEach>
+                  </div>
+              </div>
+          </div>
+        </div>
   </body>
 </html>

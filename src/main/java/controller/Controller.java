@@ -17,9 +17,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.Event;
-import model.Participate;
-import model.User;
+import model.*;
 
 /**
  * Servlet Filter implementation class Controller
@@ -47,66 +45,42 @@ public class Controller implements Filter {
 						throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
+		if(req.getUserPrincipal() != null && req.getSession().getAttribute("user") == null){
+			User u = login(req.getUserPrincipal().getName());
+			req.getSession().setAttribute("user", u);
+		}
+
 		HttpServletResponse resp =(HttpServletResponse) response;
 		RequestDispatcher rs = null;
 
 		switch (req.getRequestURI()) {
 			case "/Projet/register" : {
-				User me = createNewUser(request);
-				req.getSession().setAttribute("user", me);
+				createNewUser(request);
+
 				resp.sendRedirect("Menu.jsp");
 				break;
 			}
 
 			case "/Projet/Menu.jsp" : {
-				if(!isLoggedIn(req)){
-					resp.sendRedirect("index.jsp");
-				}else {
-					rs = request.getRequestDispatcher("Menu.jsp");
-				}
-				break;
-			}
-
-			case "/Projet/login" : {
-				User user = login(req);
-				if(user != null) {
-					req.getSession().setAttribute("user", user);
-					resp.sendRedirect("Menu.jsp");
-				}else {
-					resp.sendRedirect("index.jsp?error=1");
-				}
-				break;
-			}
-
-			case "/Projet/disconnect" : {
-				req.getSession().invalidate();
-				rs = req.getRequestDispatcher("index.jsp");
+				updateSession(req);
+				rs = request.getRequestDispatcher("Menu.jsp");
 				break;
 			}
 
 			case "/Projet/createEvent" : {
-				Integer num = createEvent(req);
-				updateSession(req);
-				resp.sendRedirect("event.jsp?eno=" + num);
-				break;
-			}
-
-			case "/Projet/event.jsp" :{
-				if(!isLoggedIn(req)){
-					resp.sendRedirect("index.jsp");
-				}else {
-					initEvent(req);
-					rs = request.getRequestDispatcher("event.jsp");
-				}
+				int eventId = createEvent(req);
+				resp.sendRedirect("event.jsp?eno=" + eventId);
 				break;
 			}
 
 			default: {
+				if(req.getRequestURI().contains("event")) {
+					initEvent(req);
+				}
 				chain.doFilter(request, response);
 			}
 		}
-
-		if(rs != null ) rs.forward(request, response);
+		if(rs != null) rs.forward(request, response);
 	}
 
 	private void initEvent(HttpServletRequest req) {
@@ -123,9 +97,8 @@ public class Controller implements Filter {
 	private Integer createEvent(HttpServletRequest req) {
 		Event event = new Event();
 		User user = (User)req.getSession().getAttribute("user");
-		Integer uno = user.getUno();
 		Participate p = new Participate();
-		p.setUno(uno);
+		p.setUno(user.getUno());
 		event.setDescr(req.getParameter("desc"));
 		event.setTitle(req.getParameter("name"));
 		em.getTransaction().begin();
@@ -134,22 +107,19 @@ public class Controller implements Filter {
 		p.setEno(event.getEno());
 		em.persist(p);
 		em.getTransaction().commit();
+		em.refresh(event);
 		return event.getEno();
 	}
 
-	private User login(HttpServletRequest req) {
+	private User login(String email) {
 		try {
-			return (User) em.createNamedQuery("User.login")
-				.setParameter("email", req.getParameter("email"))
-				.setParameter("password", req.getParameter("password"))
+			return (User) em.createNamedQuery("User.findByMail")
+				.setParameter("email", email)
 				.getSingleResult();
 		}catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
-	}
-
-	private boolean isLoggedIn(HttpServletRequest request) {
-		return request.getSession().getAttribute("user") != null;
 	}
 
 	private User createNewUser(ServletRequest request) {

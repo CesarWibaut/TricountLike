@@ -33,7 +33,7 @@
                     <h3>My events :</h3>
                     <br>
                     <c:forEach var="event" items="${user.events}">
-                         <a href="event.jsp?eno=${event.eno}">${event}</a>
+                         <p><a href="event.jsp?eno=${event.eno}">${event}</a><p>
                     </c:forEach>
                 </div>
             </div>
