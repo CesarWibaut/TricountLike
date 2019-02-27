@@ -11,24 +11,24 @@ import java.util.List;
  */
 @Entity
 @Table(name="users")
-@NamedQuery(name="User.findByMail", query="SELECT u FROM User u where u.login = :email")
-@NamedQuery(name="User.login", query="SELECT u FROM User u where u.login = :email and u.pwd = :password")
+@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
+@NamedQuery(name="User.findByMail", query="SELECT u FROM User u where u.email = :email")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer uno;
+
+	private String email;
 
 	private String firstname;
 
 	private String lastname;
 
-	private String login;
+	private String password;
 
 	private String role;
-
-	private String pwd;
 
 	//bi-directional many-to-many association to Event
 	@ManyToMany
@@ -71,12 +71,12 @@ public class User implements Serializable {
 		this.uno = uno;
 	}
 
-	public String getRole() {
-		return role;
+	public String getEmail() {
+		return this.email;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getFirstname() {
@@ -95,20 +95,20 @@ public class User implements Serializable {
 		this.lastname = lastname;
 	}
 
-	public String getLogin() {
-		return this.login;
+	public String getPassword() {
+		return this.password;
 	}
 
-	public void setLogin(String login) {
-		this.login = login;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public String getPwd() {
-		return this.pwd;
+	public String getRole() {
+		return this.role;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public List<Event> getEvents() {
@@ -149,9 +149,8 @@ public class User implements Serializable {
 		this.spents2 = spents2;
 	}
 
-	@Override
-	public String toString() {
-		return getLogin() + "  " + getRole();
+	public String toString(){
+		return firstname + " " + lastname;
 	}
-	
+
 }

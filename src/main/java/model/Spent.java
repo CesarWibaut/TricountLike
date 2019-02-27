@@ -2,7 +2,6 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 
@@ -16,14 +15,17 @@ public class Spent implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer sno;
 
-	@Temporal(TemporalType.DATE)
-	private Date createdat;
+	private Integer ammount;
 
 	private String descr;
 
-	private Float ammount;
+	//bi-directional many-to-one association to Event
+	@ManyToOne
+	@JoinColumn(name="eno")
+	private Event event;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
@@ -37,20 +39,6 @@ public class Spent implements Serializable {
 	public Spent() {
 	}
 
-	/**
-	 * @param ammount the ammount to set
-	 */
-	public void setAmmount(Float ammount) {
-		this.ammount = ammount;
-	}
-
-	/**
-	 * @return the ammount
-	 */
-	public Float getAmmount() {
-		return ammount;
-	}
-	
 	public Integer getSno() {
 		return this.sno;
 	}
@@ -59,12 +47,12 @@ public class Spent implements Serializable {
 		this.sno = sno;
 	}
 
-	public Date getCreatedat() {
-		return this.createdat;
+	public Integer getAmmount() {
+		return this.ammount;
 	}
 
-	public void setCreatedat(Date createdat) {
-		this.createdat = createdat;
+	public void setAmmount(Integer ammount) {
+		this.ammount = ammount;
 	}
 
 	public String getDescr() {
@@ -73,6 +61,14 @@ public class Spent implements Serializable {
 
 	public void setDescr(String descr) {
 		this.descr = descr;
+	}
+
+	public Event getEvent() {
+		return this.event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
 	}
 
 	public User getUser() {
@@ -91,4 +87,7 @@ public class Spent implements Serializable {
 		this.users = users;
 	}
 
+	public String toString() {
+		return ammount + " euros from " + user;
+	}
 }

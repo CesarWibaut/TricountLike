@@ -12,7 +12,7 @@
 
 <Realm  className="org.apache.catalina.realm.DataSourceRealm"
            dataSourceName="jdbc/postgres" localDataSource="true"
-           userTable="users" userNameCol="login" userCredCol="pwd"
+           userTable="users" userNameCol="email" userCredCol="password"
            userRoleTable="users" roleNameCol="role" />
 
 </Context>

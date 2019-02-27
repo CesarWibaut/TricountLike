@@ -39,6 +39,7 @@
 		<auth-method>FORM</auth-method>
 		<form-login-config>
 			<form-login-page>/index.jsp</form-login-page>
+			<form-error-page>/index.jsp</form-error-page>
 		</form-login-config>
 	</login-config> 
 </web-app>

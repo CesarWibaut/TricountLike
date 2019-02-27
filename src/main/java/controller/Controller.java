@@ -100,7 +100,7 @@ public class Controller implements Filter {
 		Participate p = new Participate();
 		p.setUno(user.getUno());
 		event.setDescr(req.getParameter("desc"));
-		event.setTitle(req.getParameter("name"));
+		event.setName(req.getParameter("name"));
 		em.getTransaction().begin();
 		em.persist(event);
 		em.flush();
@@ -124,8 +124,8 @@ public class Controller implements Filter {
 
 	private User createNewUser(ServletRequest request) {
 		User u = new User();
-		u.setLogin(request.getParameter("email"));
-		u.setPwd(request.getParameter("password"));
+		u.setEmail(request.getParameter("email"));
+		u.setPassword(request.getParameter("password"));
 		u.setFirstname(request.getParameter("firstname"));
 		u.setLastname(request.getParameter("lastname"));
 		u.setRole("user");

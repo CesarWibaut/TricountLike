@@ -15,16 +15,22 @@ public class Event implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer eno;
+
+	private Boolean active;
 
 	private String descr;
 
-	private String title;
+	private String name;
 
 	//bi-directional many-to-many association to User
 	@ManyToMany(mappedBy="events")
 	private List<User> users;
+
+	//bi-directional many-to-one association to Spent
+	@OneToMany(mappedBy="event")
+	private List<Spent> spents;
 
 	public Event() {
 	}
@@ -37,6 +43,14 @@ public class Event implements Serializable {
 		this.eno = eno;
 	}
 
+	public Boolean getActive() {
+		return this.active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
 	public String getDescr() {
 		return this.descr;
 	}
@@ -45,12 +59,12 @@ public class Event implements Serializable {
 		this.descr = descr;
 	}
 
-	public String getTitle() {
-		return this.title;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public List<User> getUsers() {
@@ -61,7 +75,26 @@ public class Event implements Serializable {
 		this.users = users;
 	}
 
-	public String toString(){
-		return "<p><strong>" + getTitle() + " : </strong> " + getDescr() + "<p>";
+	public List<Spent> getSpents() {
+		return this.spents;
 	}
+
+	public void setSpents(List<Spent> spents) {
+		this.spents = spents;
+	}
+
+	public Spent addSpent(Spent spent) {
+		getSpents().add(spent);
+		spent.setEvent(this);
+
+		return spent;
+	}
+
+	public Spent removeSpent(Spent spent) {
+		getSpents().remove(spent);
+		spent.setEvent(null);
+
+		return spent;
+	}
+
 }
