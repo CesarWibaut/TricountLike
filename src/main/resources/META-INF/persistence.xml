@@ -5,6 +5,7 @@
 		<class>model.Spent</class>
 		<class>model.User</class>
 		<class>model.Participate</class>
+		<class>model.Owes</class>
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<properties>
 			<!-- <property name="eclipselink.session.customizer" value="other.JPAEclipseLinkSessionCustomizer"/> -->

@@ -10,6 +10,11 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
+    <style>
+        .container {
+            margin-bottom: 5%;
+        }
+    </style>
 </head>
 
 <body>
@@ -43,15 +48,32 @@
         <br>
         <br>
         <div class="container card">
+            <h2>Add a participant !</h2>
+            <div class="form-check form-check-inline">
+                <form action="addUser" method="POST">
+                    <input type="hidden" name="eno" value='${ param["eno"] }'>
+                    <div class="form-group">
+                      <label for="">Email</label>
+                      <input type="text" class="form-control" name="email" id="">
+                      <small id="helpId" class="form-text text-muted">something@something.something</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="container card">
             <div class="row">
-                <div class="com-sm">
+                <div class="col-sm">
                     <br>
                     <h2>Spent something ?</h2>
-                    <form>
+                    <form action="addSpent" method="POST">
+                        <input type="hidden" name="eno" value='${ param["eno"] }'>
                         <div class="form-group row">
-                            <label for="inputPassword3" class="col-sm-2 col-form-label">Ammount</label>
-                            <div class="col-sm-10">
-                                <input type="integer" class="form-control" placeholder="Euros">
+                            <label for="inputPassword3" class="col-sm-3 col-form-label">Ammount</label>
+                            <div class="col-sm">
+                                <input type="integer" class="form-control" placeholder="Euros..." name="ammount">
                             </div>
                         </div>
                         <fieldset class="form-group row">
@@ -67,20 +89,17 @@
                                     </div>
                                 </div>
                             </c:forEach>
+                            <button type="submit" class="btn btn-primary">Add spent !</button>
                         </fieldset>
-                        <div class="form-group row">
-                            <div class="offset-sm-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary">Sign in</button>
-                            </div>
-                        </div>
                     </form>
-                </div>
-                <div class="col-sm">
-                    <h2>mdr</h2>
                 </div>
             </div>
         </div>
+        <div class="container text-center">
+            <a name="warning" id="warning" class="btn btn-danger" href="" role="button">Close project and distribute money</a>
+        </div>
     </div>
+
 </body>
 
 </html>

@@ -16,6 +16,7 @@ public class Participate implements Serializable {
 	@Id
 	private Integer eno;
 
+	@Id
 	private Integer uno;
 
 	public Participate() {

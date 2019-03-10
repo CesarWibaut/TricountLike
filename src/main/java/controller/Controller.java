@@ -54,7 +54,7 @@ public class Controller implements Filter {
 		RequestDispatcher rs = null;
 
 		switch (req.getRequestURI()) {
-			case "/Projet/register" : {
+			case "/Projet/" : {
 				createNewUser(request);
 
 				resp.sendRedirect("Menu.jsp");
@@ -73,6 +73,33 @@ public class Controller implements Filter {
 				break;
 			}
 
+			case "/Projet/addSpent" : {
+				System.out.println(req.getParameter("for"));
+				System.out.println(req.getParameter("ammount"));
+				System.out.println(req.getParameter("eno"));
+				manageSpent(req);
+				resp.sendRedirect("event.jsp?eno=" + req.getParameter("eno"));
+				break;
+			}
+
+			case "/Projet/disconnect" : {
+				req.getSession().invalidate();
+				resp.sendRedirect("Menu.jsp");
+				break;
+			}
+
+			case "/Projet/register" : {
+				createNewUser(req);
+				resp.sendRedirect("Menu.jsp");
+				break;
+			}
+
+			case "/Projet/addUser" : {
+				addUserToEvent(request.getParameter("eno"), req.getParameter("email"));
+				resp.sendRedirect("event.jsp?eno=" + request.getParameter("eno"));
+				break;
+			}
+
 			default: {
 				if(req.getRequestURI().contains("event")) {
 					initEvent(req);
@@ -83,15 +110,52 @@ public class Controller implements Filter {
 		if(rs != null) rs.forward(request, response);
 	}
 
+	private void addUserToEvent(String eno, String email) {
+		Event event = em.find(Event.class, Integer.parseInt(eno));
+		User user = (User) em.createNamedQuery("User.findByMail").setParameter("email", email).getSingleResult();
+		Participate p = new Participate();
+		p.setEno(event.getEno());
+		p.setUno(user.getUno());
+		em.getTransaction().begin();
+		em.persist(p);
+		em.getTransaction().commit();
+	}
+
+	private void manageSpent(HttpServletRequest req) {
+		String[] unoFor = req.getParameterValues("for");
+		User user = (User) req.getSession().getAttribute("users");
+		Integer eno = Integer.parseInt(req.getParameter("eno"));
+		Integer uno = user.getUno();
+		for(String s : unoFor) {
+			Owes owe = (Owes) em.createNamedQuery("Owes.findIfExist")
+								.setParameter("eno", eno)
+								.setParameter("uno", uno)
+								.setParameter("unoFor", s)
+								.getSingleResult();
+			if(owe == null) {
+				owe = new Owes();
+				owe.setEno(eno);
+				owe.setAmmount(Float.parseFloat(req.getParameter("ammount")));
+				owe.setUno(uno);
+				owe.setUnoFor(Integer.parseInt(s));
+				em.getTransaction().begin();
+				em.persist(owe);
+				em.getTransaction().commit();
+			}else {
+				System.out.println("Coucou");
+			}
+		}
+	}
+
 	private void initEvent(HttpServletRequest req) {
 		Event e = em.find(Event.class, Integer.valueOf(req.getParameter("eno")));
+		em.refresh(e);
 		req.setAttribute("event", e);
 	}
 
 	private void updateSession(HttpServletRequest req) {
 		User user = (User) req.getSession().getAttribute("user");
 		em.refresh(user);
-		System.out.println(user);
 	}
 
 	private Integer createEvent(HttpServletRequest req) {
@@ -130,7 +194,6 @@ public class Controller implements Filter {
 		u.setLastname(request.getParameter("lastname"));
 		u.setRole("user");
 
-		System.out.println(em);
 		em.getTransaction().begin();
 		em.persist(u);
 		em.getTransaction().commit();
