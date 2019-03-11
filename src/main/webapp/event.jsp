@@ -78,16 +78,19 @@
                         </div>
                         <fieldset class="form-group row">
                             <legend class="col-form-legend col-sm-2">For</legend>
-                            <c:forEach var="user" items="${event.users}">
-                                <div class="col-sm-10">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" name="for" id="gridRadios1"
-                                                value=${user.uno} checked>
-                                            ${user}
-                                        </label>
-                                    </div>
-                                </div>
+                            <c:forEach var="u" items="${event.users}">
+                                    <c:if test='${u.uno != user.uno}'>
+                                            <div class="col-sm-10">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input class="form-check-input" type="checkbox" name="for" id="gridRadios1"
+                                                                value=${u.uno} checked>
+                                                            ${u}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                    </c:if>
+                                
                             </c:forEach>
                             <button type="submit" class="btn btn-primary">Add spent !</button>
                         </fieldset>

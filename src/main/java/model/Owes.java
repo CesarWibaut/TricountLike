@@ -14,12 +14,28 @@ public class Owes implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     @Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer ono;
     private Integer uno;
     private Integer unoFor;
     private Integer eno;
     private Float ammount;
 
     public Owes() {}
+
+    /**
+     * @param ono the ono to set
+     */
+    public void setOno(Integer ono) {
+        this.ono = ono;
+    }
+
+    /**
+     * @return the ono
+     */
+    public Integer getOno() {
+        return ono;
+    }
 
     /**
      * @return the ammount
@@ -75,6 +91,10 @@ public class Owes implements Serializable {
      */
     public Integer getUno() {
         return uno;
+    }
+
+    public String toString() {
+        return this.uno + " " + this.unoFor + " " + this.ammount;
     }
 
 }

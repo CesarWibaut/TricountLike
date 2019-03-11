@@ -111,40 +111,60 @@ public class Controller implements Filter {
 	}
 
 	private void addUserToEvent(String eno, String email) {
-		Event event = em.find(Event.class, Integer.parseInt(eno));
-		User user = (User) em.createNamedQuery("User.findByMail").setParameter("email", email).getSingleResult();
-		Participate p = new Participate();
-		p.setEno(event.getEno());
-		p.setUno(user.getUno());
-		em.getTransaction().begin();
-		em.persist(p);
-		em.getTransaction().commit();
+		try {
+			Event event = em.find(Event.class, Integer.parseInt(eno));
+			User user = (User) em.createNamedQuery("User.findByMail").setParameter("email", email).getSingleResult();
+			Participate p = new Participate();
+			p.setEno(event.getEno());
+			p.setUno(user.getUno());
+			em.getTransaction().begin();
+			em.persist(p);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+		}
 	}
 
 	private void manageSpent(HttpServletRequest req) {
 		String[] unoFor = req.getParameterValues("for");
-		User user = (User) req.getSession().getAttribute("users");
+		User user = (User) req.getSession().getAttribute("user");
 		Integer eno = Integer.parseInt(req.getParameter("eno"));
 		Integer uno = user.getUno();
+		float ammount = Float.parseFloat(req.getParameter("ammount"));
+		Spent spent = new Spent();
+		spent.setAmmount((int)ammount);
+		spent.setUser(user);
+		Event event = em.find(Event.class, eno);
+		spent.setEvent(event);
+		em.getTransaction().begin();
+		em.persist(spent);
+		em.getTransaction().commit();
+		ammount /= (float)(unoFor.length +1);
+
 		for(String s : unoFor) {
+			try {
 			Owes owe = (Owes) em.createNamedQuery("Owes.findIfExist")
 								.setParameter("eno", eno)
 								.setParameter("uno", uno)
 								.setParameter("unoFor", s)
 								.getSingleResult();
-			if(owe == null) {
-				owe = new Owes();
+
+			owe.setAmmount(owe.getAmmount() + ammount);
+			} catch (Exception e) {
+				Owes owe = new Owes();
 				owe.setEno(eno);
-				owe.setAmmount(Float.parseFloat(req.getParameter("ammount")));
+				owe.setAmmount(ammount);
 				owe.setUno(uno);
 				owe.setUnoFor(Integer.parseInt(s));
+				
 				em.getTransaction().begin();
+				System.out.println(owe);
 				em.persist(owe);
+
 				em.getTransaction().commit();
-			}else {
-				System.out.println("Coucou");
-			}
+			}	
 		}
+
+
 	}
 
 	private void initEvent(HttpServletRequest req) {

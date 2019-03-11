@@ -97,4 +97,8 @@ public class Event implements Serializable {
 		return spent;
 	}
 
+	public String toString() {
+		return this.name + " : " + this.descr;
+	}
+
 }
