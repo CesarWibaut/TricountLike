@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 
 import javax.persistence.EntityManager;
@@ -74,9 +76,6 @@ public class Controller implements Filter {
 			}
 
 			case "/Projet/addSpent" : {
-				System.out.println(req.getParameter("for"));
-				System.out.println(req.getParameter("ammount"));
-				System.out.println(req.getParameter("eno"));
 				manageSpent(req);
 				resp.sendRedirect("event.jsp?eno=" + req.getParameter("eno"));
 				break;
@@ -103,11 +102,22 @@ public class Controller implements Filter {
 			default: {
 				if(req.getRequestURI().contains("event")) {
 					initEvent(req);
+				} else if (req.getRequestURI().contains("stopEvent")) {
+					stopEvent(Integer.parseInt(req.getParameter("eno")));
+					resp.sendRedirect("event.jsp?eno=" +  req.getParameter("eno"));
+					break;
 				}
 				chain.doFilter(request, response);
 			}
 		}
 		if(rs != null) rs.forward(request, response);
+	}
+
+	private void stopEvent(int eno) {
+		Event e = em.find(Event.class, eno);
+		em.getTransaction().begin();
+		e.setActive(false);
+		em.getTransaction().commit();
 	}
 
 	private void addUserToEvent(String eno, String email) {
@@ -145,7 +155,7 @@ public class Controller implements Filter {
 			Owes owe = (Owes) em.createNamedQuery("Owes.findIfExist")
 								.setParameter("eno", eno)
 								.setParameter("uno", uno)
-								.setParameter("unoFor", s)
+								.setParameter("unoFor", Integer.parseInt(s))
 								.getSingleResult();
 
 			owe.setAmmount(owe.getAmmount() + ammount);
@@ -157,7 +167,6 @@ public class Controller implements Filter {
 				owe.setUnoFor(Integer.parseInt(s));
 				
 				em.getTransaction().begin();
-				System.out.println(owe);
 				em.persist(owe);
 
 				em.getTransaction().commit();
@@ -171,6 +180,23 @@ public class Controller implements Filter {
 		Event e = em.find(Event.class, Integer.valueOf(req.getParameter("eno")));
 		em.refresh(e);
 		req.setAttribute("event", e);
+		if(!e.getActive()) {
+			List<Owes> owes = em.createNamedQuery("Owes.findByEno").setParameter("eno", Integer.parseInt(req.getParameter("eno"))).getResultList();
+			List<FormattedOwe> formatted = format(owes);
+			req.setAttribute("owes", formatted);
+		}
+	}
+
+	private List<FormattedOwe> format(List<Owes> owes) {
+		List<FormattedOwe> ret = new ArrayList<FormattedOwe>();
+		for(Owes o : owes) {
+			FormattedOwe f = new FormattedOwe();
+			f.setAmmount(o.getAmmount());
+			f.setUnoFor(em.find(User.class, o.getUno()).toString());
+			f.setUno(em.find(User.class, o.getUnoFor()).toString());
+			ret.add(f);
+		}
+		return ret;
 	}
 
 	private void updateSession(HttpServletRequest req) {
@@ -185,6 +211,7 @@ public class Controller implements Filter {
 		p.setUno(user.getUno());
 		event.setDescr(req.getParameter("desc"));
 		event.setName(req.getParameter("name"));
+		event.setActive(true);
 		em.getTransaction().begin();
 		em.persist(event);
 		em.flush();
@@ -201,7 +228,6 @@ public class Controller implements Filter {
 				.setParameter("email", email)
 				.getSingleResult();
 		}catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

@@ -98,7 +98,7 @@ public class Event implements Serializable {
 	}
 
 	public String toString() {
-		return this.name + " : " + this.descr;
+		return this.name + " : " + this.descr + (this.active ? "" : " [Closed]");
 	}
 
 }

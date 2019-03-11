@@ -10,6 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQuery(name="Owes.findIfExist", query="Select o from Owes o where o.eno = :eno and o.uno=:uno and o.unoFor = :unoFor")
+@NamedQuery(name="Owes.findByEno", query="Select o from Owes o where o.eno= :eno")
 public class Owes implements Serializable {
 	private static final long serialVersionUID = 1L;
 
