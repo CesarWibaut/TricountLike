@@ -57,7 +57,8 @@ public class Controller implements Filter {
 
 		switch (req.getRequestURI()) {
 			case "/Projet/" : {
-				createNewUser(request);
+				if(req.getMethod().equals("POST"))
+					createNewUser(request);
 
 				resp.sendRedirect("Menu.jsp");
 				break;
@@ -183,6 +184,7 @@ public class Controller implements Filter {
 		if(!e.getActive()) {
 			List<Owes> owes = em.createNamedQuery("Owes.findByEno").setParameter("eno", Integer.parseInt(req.getParameter("eno"))).getResultList();
 			List<FormattedOwe> formatted = format(owes);
+			formatted = FormattedOwe.balance(formatted);
 			req.setAttribute("owes", formatted);
 		}
 	}

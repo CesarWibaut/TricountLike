@@ -54,11 +54,6 @@
             </div>
         </div>
     </div>
-    <div class="container">
-        <form action="disconnect">
-            <input type="submit" class="btn btn-danger" value="Disconnect"></button>
-        </form>
-    </div>
 </body>
 
 </html>
